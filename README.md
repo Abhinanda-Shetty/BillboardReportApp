@@ -11,10 +11,16 @@
 - Go into the project folder <br>
 <code> cd projectname/frontend </code>
 
-- Install dependencies <br>
-  <code> npm install</code>  (this is what takes the most of the memory)
+- Install frontend dependencies <br>
+  <code> npm install</code> 
 
- #                 ||                                                    DONE CONGRATULATIONS 👏👏👏👏                               ||
+- New terminal <br>
+  <code> cd projectname/backend </code>
+
+- Install backend dependencies <br>
+  <code> npm install </code>
+
+ #                 ||                                         SETUP DONE CONGRATULATIONS 👏👏👏👏                               ||
  
  
  
@@ -35,3 +41,14 @@
   
 - Push to main branch
 <code> git push  </code> Now code is saved in Github...
+
+## To run only frontend <br>
+- <code> cd frontend </code>  <br>
+<code> npm start </code>
+
+## To run only backend : <br>
+- <code> cd backend </code> <br>
+<code> node index.js </code>
+
+## To run both frontend and backend : <br>
+<code> npm run start:all </code>
