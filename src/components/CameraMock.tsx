@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   mock: {
     height: 280,
     borderRadius: 16,
-    backgroundColor: "#0b0b0b",
+    backgroundColor: "#070404ff",
     alignItems: "center",
     justifyContent: "center",
     position: "relative",
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     width: 180,
     height: 120,
     borderWidth: 2,
-    borderColor: "#31D158",
+    borderColor: "#f5e947ff",
     borderRadius: 6,
   },
   caption: {

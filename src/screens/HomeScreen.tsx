@@ -65,14 +65,14 @@ const styles = StyleSheet.create({
   header: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#0F172A",
+    color: "#b130fcff",
   },
   card: { gap: 14 },
   row: { flexDirection: "row", gap: 12, marginTop: 12 },
-  flex: { flex: 1, borderRadius: 30 },
+  flex: { flex: 1, borderRadius: 30, backgroundColor: "black" },
   gap: { width: 12 },
   secondary: { backgroundColor: "#f70808ff" },
   sectionTitle: { fontSize: 16, fontWeight: "700", color: "#000000ff" },
   grid: { flexDirection: "column", flexWrap: "wrap", gap: 14 },
-  gridItem: { flexBasis: "12%", backgroundColor: "grey", borderRadius: 30 },
+  gridItem: { flexBasis: "12%", backgroundColor: "green", borderRadius: 30 },
 });
