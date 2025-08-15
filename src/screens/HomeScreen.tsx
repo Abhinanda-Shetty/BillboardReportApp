@@ -73,11 +73,6 @@ const styles = StyleSheet.create({
   gap: { width: 12 },
   secondary: { backgroundColor: "#f70808ff" },
   sectionTitle: { fontSize: 16, fontWeight: "700", color: "#000000ff" },
-  grid: {
-    flexDirection: "column",
-    flexWrap: "wrap",
-    gap: 14,
-    justifyContent: "center",
-  },
+  grid: { flexDirection: "column", flexWrap: "wrap", gap: 14 },
   gridItem: { flexBasis: "12%", backgroundColor: "grey", borderRadius: 30 },
 });
