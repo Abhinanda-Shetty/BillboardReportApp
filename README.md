@@ -9,7 +9,7 @@
 <code>git clone PasteTheUrlUnderCodeOPtion </code>
 
 - Go into the project folder <br>
-<code> cd projectname </code>
+<code> cd projectname/frontend </code>
 
 - Install dependencies <br>
   <code> npm install</code>  (this is what takes the most of the memory)
@@ -34,4 +34,4 @@
   <code> git commit -am "Updated ..... " </code>
   
 - Push to main branch
-<code> git push origin main </code> Now code is saved in Github...
+<code> git push  </code> Now code is saved in Github...
