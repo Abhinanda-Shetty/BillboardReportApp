@@ -74,5 +74,10 @@ const styles = StyleSheet.create({
   secondary: { backgroundColor: "#f70808ff" },
   sectionTitle: { fontSize: 16, fontWeight: "700", color: "#000000ff" },
   grid: { flexDirection: "column", flexWrap: "wrap", gap: 14 },
-  gridItem: { flexBasis: "12%", backgroundColor: "green", borderRadius: 30 },
+  gridItem: {
+    flexBasis: "12%",
+    backgroundColor: "pink",
+    borderRadius: 30,
+    color: "black",
+  },
 });
