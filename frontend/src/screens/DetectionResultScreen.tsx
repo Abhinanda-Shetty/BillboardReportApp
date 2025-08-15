@@ -64,14 +64,23 @@ export default function DetectionResultScreen() {
     const type = match ? `image/${match[1]}` : "image/jpeg";
 
     const formData = new FormData();
-    formData.append("photo", { uri: imageUri, name: filename, type } as any);
+    formData.append("photo", {
+      uri: imageUri,
+      name: filename,
+      type: type,
+    } as any);
 
     try {
-      const res = await fetch("http://YOUR_BACKEND_IP:5000/api/detect", {
+      const res = await fetch("http://localhost:5000/api/detect", {
         method: "POST",
         body: formData,
-        // ⚠️ Let fetch set Content-Type for FormData automatically
+        // ✅ Don't set Content-Type - let fetch handle it
       });
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
       const data = await res.json();
       setResult(data);
     } catch (err) {
