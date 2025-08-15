@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.2.0"
+  },
+  "scripts": {
+  "start:all": "concurrently \"npm start --prefix frontend\" \"node backend/index.js\""
+}
+
+}
