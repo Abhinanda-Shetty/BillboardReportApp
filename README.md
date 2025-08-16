@@ -18,7 +18,9 @@
   <code> cd projectname/backend </code>
 
 - Install backend dependencies <br>
-  <code> npm install </code>
+  <code> npm install </code> <br>
+  <code> npm install express multer cors </code>
+
 
  #                 ||                                         SETUP DONE CONGRATULATIONS 👏👏👏👏                               ||
  
