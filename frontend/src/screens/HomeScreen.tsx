@@ -67,33 +67,25 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: "#000000ff",
   },
-  card: { gap: 28, backgroundColor: "lightgrey" },
+  card: {
+    gap: 28,
+    backgroundColor: "lightgrey",
+    borderRadius: 12,
+    padding: 12,
+  },
   row: { flexDirection: "row", gap: 8, marginTop: 12 },
   flex: { flex: 1, borderRadius: 30, backgroundColor: "black" },
   gap: { width: 12 },
   secondary: { backgroundColor: "#f70808ff" },
-<<<<<<< HEAD:src/screens/HomeScreen.tsx
   sectionTitle: { fontSize: 16, fontWeight: "700", color: "#000000ff" },
-  grid: { flexDirection: "column", flexWrap: "wrap", gap: 14 },
-  gridItem: { flexBasis: "12%", backgroundColor: "brown", borderRadius: 30 },
-=======
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "700",
-
-    color: "#000000ff",
-  },
   grid: {
-    flexDirection: "row",
-    display: "contents",
+    flexDirection: "column",
     flexWrap: "wrap",
-    gap: 32,
+    gap: 12,
   },
   gridItem: {
-    flexBasis: "13%",
-    backgroundColor: "blue",
-    display: "flex",
+    flexBasis: "45%",
+    backgroundColor: "brown",
     borderRadius: 30,
   },
->>>>>>> 8cd0efb27be0b1ae552b4ca69f62d0e4ece7a2ea:frontend/src/screens/HomeScreen.tsx
 });
