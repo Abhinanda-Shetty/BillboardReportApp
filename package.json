@@ -3,7 +3,11 @@
     "concurrently": "^9.2.0"
   },
   "scripts": {
-  "start:all": "concurrently \"npm start --prefix frontend\" \"node backend/index.js\""
-}
-
+    "start:all": "concurrently \"npm start --prefix frontend\" \"node backend/index.js\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
 }
