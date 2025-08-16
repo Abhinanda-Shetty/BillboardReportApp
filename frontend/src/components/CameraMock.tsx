@@ -1,6 +1,5 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
-
 export default function CameraMock() {
   return (
     <View style={styles.mock}>
@@ -9,7 +8,6 @@ export default function CameraMock() {
     </View>
   );
 }
-
 const styles = StyleSheet.create({
   mock: {
     height: 280,

@@ -20,6 +20,10 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
+      "usesCleartextTraffic": true,
+      "networkSecurityConfig": {
+        "cleartextTrafficPermitted": true
+      },
       "edgeToEdgeEnabled": true
     },
     "web": {
@@ -27,3 +31,6 @@
     }
   }
 }
+
+
+

@@ -59,33 +59,45 @@ const styles = StyleSheet.create({
   container: {
     padding: 16,
     paddingBottom: 40,
-    gap: 16,
     backgroundColor: "#fffefdff",
   },
   header: {
     fontSize: 24,
     fontWeight: "800",
     color: "#000000ff",
+    marginBottom: 16, // ✅ Replace gap with margin
   },
   card: {
-    gap: 28,
     backgroundColor: "lightgrey",
     borderRadius: 12,
     padding: 12,
+    marginBottom: 16, // ✅ Replace gap with margin
   },
-  row: { flexDirection: "row", gap: 8, marginTop: 12 },
-  flex: { flex: 1, borderRadius: 30, backgroundColor: "black" },
-  gap: { width: 12 },
+  row: {
+    flexDirection: "row",
+    marginTop: 12, // ✅ Removed gap
+  },
+  flex: {
+    flex: 1,
+    borderRadius: 30,
+    backgroundColor: "black",
+  },
+  gap: { width: 12 }, // ✅ Keep this - it's a spacer View
   secondary: { backgroundColor: "#f70808ff" },
-  sectionTitle: { fontSize: 16, fontWeight: "700", color: "#000000ff" },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#000000ff",
+    marginBottom: 12, // ✅ Add margin for spacing
+  },
   grid: {
     flexDirection: "column",
     flexWrap: "wrap",
-    gap: 12,
   },
   gridItem: {
-    flexBasis: "45%",
+    flexBasis: "23%",
     backgroundColor: "brown",
     borderRadius: 30,
+    marginBottom: 2,
   },
 });
