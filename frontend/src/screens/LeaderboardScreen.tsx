@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, FlatList } from "react-native";
 import Card from "../components/Card";
 
 const RANKS = [
-  { name: "Asha K", points: 420, badges: 5 },
-  { name: "Ravi P", points: 360, badges: 4 },
-  { name: "You", points: 280, badges: 3 },
+  { name: "Aqeel Ahmed", points: 420, badges: 5 },
+  { name: "Abhinanda N Shetty", points: 360, badges: 4 },
+  { name: "Adithya B", points: 280, badges: 3 },
 ];
 
 export default function LeaderboardScreen() {
