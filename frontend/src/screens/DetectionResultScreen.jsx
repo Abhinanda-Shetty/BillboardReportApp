@@ -7,19 +7,21 @@ import {
   ScrollView,
   Button,
   Animated,
+  Alert,
 } from "react-native";
 import { CameraView, CameraType, useCameraPermissions } from "expo-camera";
+import { detectAPI } from "../api";
 import PrimaryButton from "../components/PrimaryButton";
 import Card from "../components/Card";
 
-export default function DetectionResultScreen() {
-  const [imageUri, setImageUri] = useState<string | null>(null);
-  const [result, setResult] = useState<any>(null);
-  const [facing, setFacing] = useState<CameraType>("back");
+export default function DetectionResultScreen({ navigation }) {
+  const [imageUri, setImageUri] = useState(null);
+  const [result, setResult] = useState(null);
+  const [facing, setFacing] = useState("back");
   const [permission, requestPermission] = useCameraPermissions();
   const [uploading, setUploading] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
-  const cameraRef = useRef<CameraView | null>(null);
+  const cameraRef = useRef(null);
 
   if (!permission) {
     return <View />;
@@ -28,7 +30,9 @@ export default function DetectionResultScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.center}>
-        <Text>We need permission to show the camera</Text>
+        <Text style={styles.permissionText}>
+          We need permission to show the camera
+        </Text>
         <Button title="Grant Permission" onPress={requestPermission} />
       </View>
     );
@@ -39,9 +43,10 @@ export default function DetectionResultScreen() {
       try {
         const photo = await cameraRef.current.takePictureAsync();
         setImageUri(photo.uri);
-        setResult(null); // Clear previous results
+        setResult(null);
       } catch (err) {
         console.log("Error taking photo:", err);
+        Alert.alert("Error", "Failed to take photo");
       }
     }
   };
@@ -58,19 +63,10 @@ export default function DetectionResultScreen() {
         uri: imageUri,
         type: "image/jpeg",
         name: "photo.jpg",
-      } as any);
-
-      const response = await fetch("http://192.168.43.18:5000/api/detect", {
-        method: "POST",
-        body: formData,
       });
 
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      setResult(data);
+      const response = await detectAPI.detect(formData);
+      setResult(response.data);
 
       // Animate success result
       Animated.timing(fadeAnim, {
@@ -82,16 +78,26 @@ export default function DetectionResultScreen() {
       console.error("Upload failed:", error);
       setResult({
         success: false,
-        message: "Upload failed. Please try again.",
+        message:
+          error.response?.data?.error || "Upload failed. Please try again.",
       });
     } finally {
       setUploading(false);
     }
   };
 
+  const proceedToReport = () => {
+    if (result && result.success && imageUri) {
+      navigation.navigate("ReportForm", {
+        imageUri,
+        detectionResult: result,
+      });
+    }
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Card style={styles.card}>
+      <Card style={styles.cameraCard}>
         {imageUri ? (
           <Image source={{ uri: imageUri }} style={styles.preview} />
         ) : (
@@ -110,9 +116,13 @@ export default function DetectionResultScreen() {
             style={styles.button}
           />
           <PrimaryButton
-            label={uploading ? "Uploading..." : "Upload & Detect"}
+            label={uploading ? "Analyzing..." : "Analyze Image"}
             onPress={uploadPhoto}
-            disabled={uploading}
+            disabled={uploading || !imageUri}
+            style={[
+              styles.button,
+              { opacity: !imageUri || uploading ? 0.6 : 1 },
+            ]}
           />
         </View>
       </Card>
@@ -121,7 +131,7 @@ export default function DetectionResultScreen() {
         <Animated.View style={[styles.resultContainer, { opacity: fadeAnim }]}>
           <Card
             style={[
-              styles.card,
+              styles.resultCard,
               result.success ? styles.successCard : styles.errorCard,
             ]}
           >
@@ -135,7 +145,7 @@ export default function DetectionResultScreen() {
                   result.success ? styles.successText : styles.errorText,
                 ]}
               >
-                {result.success ? "Detection Complete!" : "Upload Failed"}
+                {result.success ? "Analysis Complete!" : "Analysis Failed"}
               </Text>
             </View>
 
@@ -144,13 +154,11 @@ export default function DetectionResultScreen() {
             {result.success && result.violations && (
               <View style={styles.violationsContainer}>
                 <Text style={styles.violationsTitle}>Violations Detected:</Text>
-                {result.violations.map((violation: any, idx: number) => (
+                {result.violations.map((violation, idx) => (
                   <View key={idx} style={styles.violationItem}>
-                    <View style={styles.violationHeader}>
-                      <Text style={styles.violationType}>
-                        🚨 {violation.type}
-                      </Text>
-                    </View>
+                    <Text style={styles.violationType}>
+                      🚨 {violation.type}
+                    </Text>
                     <Text style={styles.violationDescription}>
                       {violation.description}
                     </Text>
@@ -160,7 +168,12 @@ export default function DetectionResultScreen() {
             )}
 
             {result.success && (
-              <View style={styles.successActions}>
+              <View style={styles.actionButtons}>
+                <PrimaryButton
+                  label="Submit Report"
+                  onPress={proceedToReport}
+                  style={[styles.actionButton, styles.submitButton]}
+                />
                 <PrimaryButton
                   label="New Detection"
                   onPress={() => {
@@ -168,7 +181,7 @@ export default function DetectionResultScreen() {
                     setImageUri(null);
                     fadeAnim.setValue(0);
                   }}
-                  style={styles.actionButton}
+                  style={[styles.actionButton, styles.newDetectionButton]}
                 />
               </View>
             )}
@@ -177,11 +190,15 @@ export default function DetectionResultScreen() {
       )}
 
       {!result && (
-        <Card style={styles.card}>
-          <Text style={styles.title}>Detection Summary</Text>
-          <Text style={styles.body}>
-            Upload a photo to detect billboard violations. Our AI will analyze
-            dimensions, placement, and compliance with local regulations.
+        <Card style={styles.infoCard}>
+          <Text style={styles.infoTitle}>📊 AI Detection</Text>
+          <Text style={styles.infoText}>
+            Take a photo of a billboard to detect potential violations. Our AI
+            analyzes:
+            {"\n\n"}• Size and dimensions
+            {"\n"}• Placement compliance
+            {"\n"}• Content appropriateness
+            {"\n"}• Structural safety
           </Text>
         </Card>
       )}
@@ -194,16 +211,41 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: "#F8FAFC",
   },
-  card: {
-    marginVertical: 8,
-    backgroundColor: "#FFFFFF",
-    borderRadius: 16,
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
     padding: 20,
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 8,
-    elevation: 3,
+    backgroundColor: "#F8FAFC",
+  },
+  permissionText: {
+    fontSize: 16,
+    textAlign: "center",
+    marginBottom: 20,
+    color: "#374151",
+  },
+  cameraCard: {
+    padding: 16,
+    marginBottom: 16,
+  },
+  preview: {
+    height: 300,
+    borderRadius: 12,
+    backgroundColor: "#000000",
+  },
+  buttonRow: {
+    flexDirection: "row",
+    marginTop: 16,
+    gap: 12,
+  },
+  button: {
+    flex: 1,
+  },
+  resultContainer: {
+    marginBottom: 16,
+  },
+  resultCard: {
+    padding: 20,
   },
   successCard: {
     backgroundColor: "#F0FDF4",
@@ -215,32 +257,17 @@ const styles = StyleSheet.create({
     borderColor: "#EF4444",
     borderWidth: 2,
   },
-  preview: {
-    height: 300,
-    borderRadius: 12,
-  },
-  buttonRow: {
-    flexDirection: "row",
-    marginTop: 15,
-    gap: 10,
-  },
-  button: {
-    flex: 1,
-  },
-  resultContainer: {
-    marginTop: 10,
-  },
   resultHeader: {
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 16,
   },
   resultIcon: {
     fontSize: 48,
-    marginBottom: 10,
+    marginBottom: 8,
   },
   resultTitle: {
-    fontSize: 24,
-    fontWeight: "800",
+    fontSize: 20,
+    fontWeight: "bold",
     textAlign: "center",
   },
   successText: {
@@ -253,61 +280,66 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
     color: "#374151",
-    marginBottom: 20,
+    marginBottom: 16,
     lineHeight: 24,
   },
   violationsContainer: {
-    marginTop: 20,
+    marginTop: 16,
   },
   violationsTitle: {
-    fontSize: 18,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "bold",
     color: "#1F2937",
-    marginBottom: 15,
+    marginBottom: 12,
   },
   violationItem: {
     backgroundColor: "#FEF3C7",
     borderLeftWidth: 4,
     borderLeftColor: "#F59E0B",
-    padding: 15,
+    padding: 12,
     borderRadius: 8,
-    marginBottom: 10,
-  },
-  violationHeader: {
     marginBottom: 8,
   },
   violationType: {
-    fontSize: 16,
-    fontWeight: "700",
+    fontSize: 14,
+    fontWeight: "bold",
     color: "#92400E",
+    marginBottom: 4,
   },
   violationDescription: {
-    fontSize: 14,
+    fontSize: 12,
     color: "#78350F",
-    lineHeight: 20,
+    lineHeight: 18,
   },
-  successActions: {
-    marginTop: 25,
-    alignItems: "center",
+  actionButtons: {
+    flexDirection: "row",
+    marginTop: 20,
+    gap: 12,
   },
   actionButton: {
-    backgroundColor: "#22C55E",
-    paddingHorizontal: 30,
-  },
-  title: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#1F2937",
-    marginBottom: 10,
-  },
-  body: {
-    fontSize: 14,
-    color: "#6B7280",
-    lineHeight: 20,
-  },
-  center: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+  },
+  submitButton: {
+    backgroundColor: "#10B981",
+  },
+  newDetectionButton: {
+    backgroundColor: "#6B7280",
+  },
+  infoCard: {
+    backgroundColor: "#EBF8FF",
+    borderLeftWidth: 4,
+    borderLeftColor: "#0A84FF",
+    padding: 16,
+  },
+  infoTitle: {
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#1E40AF",
+    marginBottom: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    color: "#1E3A8A",
+    lineHeight: 20,
   },
 });
