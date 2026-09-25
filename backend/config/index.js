@@ -15,7 +15,7 @@ const connectDB = async () => {
   } catch (err) {
     console.error("[DB] Connection failed:", err.message);
     console.error("[DB] Check: MONGO_URI in .env, Atlas IP whitelist, credentials.");
-    process.exit(1);
+    throw err;
   }
 };
 
