@@ -4,10 +4,15 @@ import { Platform } from "react-native";
 
 const DEV_MACHINE_IP = "172.25.129.112";
 
-const API_BASE_URL =
+const LOCAL_API_URL =
   Platform.OS === "web"
     ? "http://localhost:5001/api"
     : `http://${DEV_MACHINE_IP}:5001/api`;
+
+const PRODUCTION_API_URL =
+  "https://billboard-report-api.vercel.app/api";
+
+const API_BASE_URL = PRODUCTION_API_URL;
 
 console.log("========================================");
 console.log("🔧 API CONFIG");
