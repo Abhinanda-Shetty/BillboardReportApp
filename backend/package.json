@@ -21,6 +21,7 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.17.1",
+    "multer": "^2.4.0",
     "multer-storage-cloudinary": "^4.0.0",
     "openai": "^7.23.0"
   }
