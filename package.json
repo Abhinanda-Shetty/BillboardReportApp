@@ -1,0 +1,14 @@
+{
+  "devDependencies": {
+    "concurrently": "^9.2.0",
+    "hint": "^7.1.13"
+  },
+  "scripts": {
+    "start:all": "concurrently \"npm start --prefix frontend\" \"node backend/index.js\""
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
+}
