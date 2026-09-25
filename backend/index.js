@@ -1,52 +1,47 @@
 /**
- * index.js - Server entry point
+ * index.js - Vercel entry point
  *
- * Responsibilities:
- *   1. Load environment variables.
- *   2. Connect to MongoDB and configure Cloudinary.
- *   3. Import the Express app.
- *   4. Start the HTTP server.
- *   5. Handle graceful shutdown signals.
+ * Initializes MongoDB and Cloudinary before handling requests.
+ * Vercel manages the HTTP server, so app.listen() is not required.
  */
 
 const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, ".env") });
 
-const mongoose = require("mongoose");
-const app      = require("./app");
+const app = require("./app");
 const {
   connectDB,
   configureCloudinary,
   testCloudinaryConnection,
 } = require("./config");
 
-const PORT = process.env.PORT || 5001;
+let initialized = false;
 
-const startServer = async () => {
-  // Initialise third-party services before accepting requests
+const initializeServices = async () => {
+  if (initialized) return;
+
   configureCloudinary();
+
   await connectDB();
+
   await testCloudinaryConnection();
 
-  app.listen(PORT, "0.0.0.0", () => {
-    console.log(`[Server] Listening on http://0.0.0.0:${PORT}`);
-    console.log(`[Server] Health check: http://0.0.0.0:${PORT}/`);
-    console.log(`[Server] DB check:     http://0.0.0.0:${PORT}/api/debug/test-db`);
-  });
+  initialized = true;
+
+  console.log("[Server] Services initialized successfully");
 };
 
-// ─── Graceful Shutdown ────────────────────────────────────────────────────────
-const shutdown = async (signal) => {
-  console.log(`[Server] ${signal} received - shutting down gracefully.`);
-  await mongoose.connection.close();
-  process.exit(0);
+module.exports = async (req, res) => {
+  try {
+    await initializeServices();
+
+    return app(req, res);
+  } catch (err) {
+    console.error("[Server] Initialization failed:", err.message);
+
+    return res.status(500).json({
+      success: false,
+      error: "Server initialization failed",
+    });
+  }
 };
-
-process.on("SIGTERM", () => shutdown("SIGTERM"));
-process.on("SIGINT",  () => shutdown("SIGINT"));
-
-// ─── Boot ─────────────────────────────────────────────────────────────────────
-startServer().catch((err) => {
-  console.error("[Server] Failed to start:", err.message);
-  process.exit(1);
-});
