@@ -9,10 +9,7 @@ const LOCAL_API_URL =
     ? "http://localhost:5001/api"
     : `http://${DEV_MACHINE_IP}:5001/api`;
 
-const PRODUCTION_API_URL =
-  "https://billboard-report-api.vercel.app/api";
-
-const API_BASE_URL = PRODUCTION_API_URL;
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || LOCAL_API_URL;
 
 console.log("========================================");
 console.log("🔧 API CONFIG");

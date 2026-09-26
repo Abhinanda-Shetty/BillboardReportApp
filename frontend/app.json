@@ -10,9 +10,10 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+    "package": "com.abhinanda.donewithit",
+    "adaptiveIcon": {
+    "foregroundImage": "./assets/adaptive-icon.png",
+    "backgroundColor": "#ffffff"
       }
     },
     "web": {
@@ -20,6 +21,11 @@
     },
     "plugins": [
       "expo-status-bar"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "eadbb5b0-8a94-4f64-ac30-b32f758c39ac"
+      }
+    }
   }
 }
