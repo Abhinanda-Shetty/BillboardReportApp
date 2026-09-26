@@ -1,4 +1,6 @@
 # 🏙️AI-Powered Billboard Violation Detection & Reporting System
+🌐 **Live Demo:** https://billboard-report-application.vercel.app/
+
 BillboardReportApp is a mobile-based AI system designed to help identify potentially non-compliant billboards and advertising displays from photographs.
 
 Users can capture or upload a billboard image through the mobile application. The image is securely uploaded to cloud storage, analyzed by a vision-language AI model, and the detected violations are returned to the application in a structured format.
